@@ -1,0 +1,110 @@
+---
+title: "Math 50 Fall 2017, Homework #7"
+output: rmarkdown::github_document
+By: Aadil Islam
+---
+
+__NOTE: For your homework download and use the template__ (https://math.dartmouth.edu/~m50f17/HW7.Rmd)
+
+__Read the green comments in the rmd file to see where your answers should go.__
+
+#### An example from Regression Diagnostics: Identifying Influential Data and Sources of Collinearity (Belsley, Kuh and Welsch)
+
+[,1]	sr	numeric	aggregate personal savings
+
+[,2]	pop15	numeric	% of population under 15
+
+[,3]	pop75	numeric	% of population over 75
+
+[,4]	dpi	numeric	real per-capita disposable income
+
+[,5]	ddpi	numeric	% growth rate of dpi
+
+
+```{r}
+
+data(LifeCycleSavings)
+lm.SR <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data = LifeCycleSavings)
+summary(inflm.SR <- influence.measures(lm.SR))
+inflm.SR
+which(apply(inflm.SR$is.inf, 1, any)) 
+rstandard(lm.SR)
+rstudent(lm.SR)
+
+# dfbetas(lm.SR)
+dffits(lm.SR)
+covratio(lm.SR)
+
+```
+
+## Question-1 
+- Chapter 6, Problem 15. 
+- First check the following page from R project documentation (for various plots to visualize the influence measures): 
+- https://cran.r-project.org/web/packages/olsrr/vignettes/influence_measures.html
+- Note: You might need libraries such as olsrr for some of the plots below. 
+
+### Part (a) 
+- Plot :  Cook's D chart,  DFBETAs Panel, DFFITS Plot and Standardized Residual Chart that are shown in the above link. 
+
+```{r}
+library(olsrr)
+library(MPV)
+data(table.b14)
+y = table.b14$y
+x1 = table.b14$x1
+x2 = table.b14$x2
+x3 = table.b14$x3
+x4 = table.b14$x4
+model = lm(y ~ x1 + x2+ x3+x4)
+ols_cooksd_chart(model)
+ols_dfbetas_panel(model)
+ols_dffits_plot(model)
+ols_srsd_chart(model)
+hatVals = hatvalues(model)
+meanHatVal = mean(hatVals)
+hatVals > 2 * meanHatVal
+```
+
+### Part (b) 
+- Find the points with high leverage and Cook's distance. 
+
+Observations 2, 4, 8, and 9 have large cook's distances, however the cook's distances for observations 2 and 4 are far higher than those of 8 and 9. This means that observations 2 and 4 are more likely influential, as they have considerable influence on the least-squares estimates (upon removal from the data set each would cause a large difference in squared distance between original $\hat{\beta}$ and $\hat{\beta_i}$. Furthermore, only the hat values for observations 2, 4, and 9 exceed twice the mean hat value, indicating those as points with high leverage.
+
+### Part (c) 
+- Plot "Studentized Residuals vs Leverage Plot" that you see in the above link.  Which regions in this plot corresponds to leverage points,  pure leverage and influential regions. Detect the points in each region.
+
+```{r}
+ols_rsdlev_plot(model)
+```
+
+Based on the Studentized Residuals vs. Leverage Plot, the middle-right region contains pure leverage point. Here, residuals are small and leverage is high, so there is remoteness in x but consistency with the model's predicted values. In general, influential points lie in the top-right and bottom-right regions because they have high leverage but are NOT consistent with the model's predicted values, ie. high-magnitude standard residuals (observation 4). The top-left and bottom-left regions describe contain points with low leverage and inconsistency with model, or simply outliers (observations 2 and 8, although observation 2 is fairly close to being considered influential and observation 8 is close to not being an outlier)
+
+### Part (d) 
+- What do you think are the most influential points? (You can use the stats shown above or plots in previous parts.)
+
+Based on the considerably large cook's distances and high leverages for observations 2 and 4 from Parts (a/b), as well as observation 4's lieing in the influential region and observation 2's relative closeness to the influential region from Part (c), I think observations 2 and 4 are influential points."
+
+### Part (e) 
+- Comment about the normality assumption using probability plot. Remove the most influential points (that you suggested in part-d) and discuss the change/improvements on normality assumption (comparing probability plots).  
+
+```{r}
+rStuRes = rstudent(model)
+qqnorm(rStuRes, datax = TRUE, main="Normal Probability Plot")
+qqline(rStuRes, datax = TRUE)
+yNew = y[-4]
+x1New = x1[-4]
+x2New = x2[-4]
+x3New = x3[-4]
+x4New = x4[-4]
+yNew = yNew[-2]
+x1New = x1New[-2]
+x2New = x2New[-2]
+x3New = x3New[-2]
+x4New = x4New[-2]
+newModel = lm(yNew ~ x1New + x2New + x3New + x4New)
+rStuRes = rstudent(newModel)
+qqnorm(rStuRes, datax = TRUE, main="Normal Probability Plot w/out Influential Points")
+qqline(rStuRes, datax = TRUE)
+```
+
+Initially the normality assumption is moderately fulfilled as most of the points follow the line in the Normal Probability Plot, however there is clearly an outlier to the left of the data. Upon removal of the influential points from part (d), the normality assumption is even better fulfilled and it is safer to conclude that the assumption has been met.
