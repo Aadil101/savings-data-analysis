@@ -414,7 +414,7 @@ qqnorm(rStuRes, datax = TRUE, main="Normal Probability Plot")
 qqline(rStuRes, datax = TRUE)
 ```
 
-![](savingsDataAnalysis_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
 yNew = y[-4]
@@ -433,7 +433,7 @@ qqnorm(rStuRes, datax = TRUE, main="Normal Probability Plot w/out Influential Po
 qqline(rStuRes, datax = TRUE)
 ```
 
-![](savingsDataAnalysis_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 
 Initially the normality assumption is moderately fulfilled as most of
 the points follow the line in the Normal Probability Plot, however there
