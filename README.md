@@ -1,7 +1,7 @@
 Math 50 Fall 2017, Homework \#7
 ================
 
-#### An example from Regression Diagnostics: Identifying Influential Data and Sources of Collinearity (Belsley, Kuh and Welsch)
+## An example from Regression Diagnostics: Identifying Influential Data and Sources of Collinearity (Belsley, Kuh and Welsch)
 
 \[,1\] sr numeric aggregate personal savings
 
