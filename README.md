@@ -1,12 +1,6 @@
 Math 50 Fall 2017, Homework \#7
 ================
 
-**NOTE: For your homework download and use the template**
-(<https://math.dartmouth.edu/~m50f17/HW7.Rmd>)
-
-**Read the green comments in the rmd file to see where your answers
-should go.**
-
 #### An example from Regression Diagnostics: Identifying Influential Data and Sources of Collinearity (Belsley, Kuh and Welsch)
 
 \[,1\] sr numeric aggregate personal savings
@@ -260,22 +254,18 @@ covratio(lm.SR)
 ## Question-1
 
 -   Chapter 6, Problem 15.
--   First check the following page from R project documentation (for
-    various plots to visualize the influence measures):
+-   First check the following page from R project documentation (for various plots to visualize the influence measures):
 -   <https://cran.r-project.org/web/packages/olsrr/vignettes/influence_measures.html>
--   Note: You might need libraries such as olsrr for some of the plots
-    below.
+-   Note: You might need libraries such as olsrr for some of the plots below.
 
 ### Part (a)
 
--   Plot : Cook’s D chart, DFBETAs Panel, DFFITS Plot and Standardized
-    Residual Chart that are shown in the above link.
+-   Plot : Cook’s D chart, DFBETAs Panel, DFFITS Plot and Standardized Residual Chart that are shown in the above link.
 
 ``` r
 library(olsrr)
 ```
 
-    ## 
     ## Attaching package: 'olsrr'
 
     ## The following object is masked from 'package:datasets':
@@ -354,21 +344,11 @@ hatVals > 2 * meanHatVal
 
 -   Find the points with high leverage and Cook’s distance.
 
-Observations 2, 4, 8, and 9 have large cook’s distances, however the
-cook’s distances for observations 2 and 4 are far higher than those of 8
-and 9. This means that observations 2 and 4 are more likely influential,
-as they have considerable influence on the least-squares estimates (upon
-removal from the data set each would cause a large difference in squared
-distance between original *β̂* and $\\hat{\\beta\_i}$. Furthermore, only
-the hat values for observations 2, 4, and 9 exceed twice the mean hat
-value, indicating those as points with high leverage.
+Observations 2, 4, 8, and 9 have large cook’s distances, however the cook’s distances for observations 2 and 4 are far higher than those of 8 and 9. This means that observations 2 and 4 are more likely influential, as they have considerable influence on the least-squares estimates (upon removal from the data set each would cause a large difference in squared distance between original *β̂* and *β̂*<sub>i</sub>. Furthermore, only the hat values for observations 2, 4, and 9 exceed twice the mean hat value, indicating those as points with high leverage.
 
 ### Part (c)
 
--   Plot “Studentized Residuals vs Leverage Plot” that you see in the
-    above link. Which regions in this plot corresponds to leverage
-    points, pure leverage and influential regions. Detect the points in
-    each region.
+-   Plot “Studentized Residuals vs Leverage Plot” that you see in the above link. Which regions in this plot corresponds to leverage points, pure leverage and influential regions. Detect the points in each region.
 
 ``` r
 ols_rsdlev_plot(model)
@@ -378,35 +358,17 @@ ols_rsdlev_plot(model)
     ## Use 'ols_plot_resid_lev()' instead.
     ## See help("Deprecated")
 
-Based on the Studentized Residuals vs. Leverage Plot, the middle-right
-region contains pure leverage point. Here, residuals are small and
-leverage is high, so there is remoteness in x but consistency with the
-model’s predicted values. In general, influential points lie in the
-top-right and bottom-right regions because they have high leverage but
-are NOT consistent with the model’s predicted values, ie. high-magnitude
-standard residuals (observation 4). The top-left and bottom-left regions
-describe contain points with low leverage and inconsistency with model,
-or simply outliers (observations 2 and 8, although observation 2 is
-fairly close to being considered influential and observation 8 is close
-to not being an outlier)
+Based on the Studentized Residuals vs. Leverage Plot, the middle-right region contains pure leverage point. Here, residuals are small and leverage is high, so there is remoteness in x but consistency with the model’s predicted values. In general, influential points lie in the top-right and bottom-right regions because they have high leverage but are NOT consistent with the model’s predicted values, ie. high-magnitude standard residuals (observation 4). The top-left and bottom-left regions describe contain points with low leverage and inconsistency with model, or simply outliers (observations 2 and 8, although observation 2 is fairly close to being considered influential and observation 8 is close to not being an outlier)
 
 ### Part (d)
 
--   What do you think are the most influential points? (You can use the
-    stats shown above or plots in previous parts.)
+-   What do you think are the most influential points? (You can use the stats shown above or plots in previous parts.)
 
-Based on the considerably large cook’s distances and high leverages for
-observations 2 and 4 from Parts (a/b), as well as observation 4’s lieing
-in the influential region and observation 2’s relative closeness to the
-influential region from Part (c), I think observations 2 and 4 are
-influential points."
+Based on the considerably large cook’s distances and high leverages for observations 2 and 4 from Parts (a/b), as well as observation 4’s lying in the influential region and observation 2’s relative closeness to the influential region from Part (c), I think observations 2 and 4 are influential points."
 
 ### Part (e)
 
--   Comment about the normality assumption using probability plot.
-    Remove the most influential points (that you suggested in part-d)
-    and discuss the change/improvements on normality assumption
-    (comparing probability plots).
+-   Comment about the normality assumption using probability plot. Remove the most influential points (that you suggested in part-d) and discuss the change/improvements on normality assumption (comparing probability plots).
 
 ``` r
 rStuRes = rstudent(model)
@@ -435,9 +397,4 @@ qqline(rStuRes, datax = TRUE)
 
 ![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 
-Initially the normality assumption is moderately fulfilled as most of
-the points follow the line in the Normal Probability Plot, however there
-is clearly an outlier to the left of the data. Upon removal of the
-influential points from part (d), the normality assumption is even
-better fulfilled and it is safer to conclude that the assumption has
-been met.
+Initially the normality assumption is moderately fulfilled as most of the points follow the line in the Normal Probability Plot, however there is clearly an outlier to the left of the data. Upon removal of the influential points from part (d), the normality assumption is even better fulfilled and it is safer to conclude that the assumption has been met.
